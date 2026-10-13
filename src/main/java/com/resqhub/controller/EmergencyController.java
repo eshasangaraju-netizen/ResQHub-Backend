@@ -2,7 +2,6 @@ package com.resqhub.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,62 +17,40 @@ import com.resqhub.service.EmergencyService;
 
 @RestController
 @RequestMapping("/api/emergencies")
-@CrossOrigin(origins = "https://resqhub-frontend-x115.onrender.com")
+@CrossOrigin(origins = "http://localhost:5173")
 public class EmergencyController {
 
-    private final EmergencyService service;
+    private final EmergencyService emergencyService;
 
-    public EmergencyController(EmergencyService service) {
-        this.service = service;
+    public EmergencyController(EmergencyService emergencyService) {
+        this.emergencyService = emergencyService;
     }
 
     @GetMapping
-    public List<EmergencyRequest> getAll() {
-        return service.getAllEmergencies();
+    public List<EmergencyRequest> getAllEmergencies() {
+        return emergencyService.getAllEmergencies();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmergencyRequest> getById(
-            @PathVariable int id) {
-
-        EmergencyRequest emergency =
-                service.getEmergencyById(id);
-
-        if (emergency == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(emergency);
+    public EmergencyRequest getEmergencyById(@PathVariable Integer id) {
+        return emergencyService.getEmergencyById(id);
     }
 
     @PostMapping
-    public EmergencyRequest create(
+    public EmergencyRequest createEmergency(
             @RequestBody EmergencyRequest emergency) {
-
-        return service.createEmergency(emergency);
+        return emergencyService.createEmergency(emergency);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmergencyRequest> update(
-            @PathVariable int id,
+    public EmergencyRequest updateEmergency(
+            @PathVariable Integer id,
             @RequestBody EmergencyRequest emergency) {
-
-        EmergencyRequest updated =
-                service.updateEmergency(id, emergency);
-
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(updated);
+        return emergencyService.updateEmergency(id, emergency);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable int id) {
-
-        service.deleteEmergency(id);
-
-        return ResponseEntity.noContent().build();
+    public void deleteEmergency(@PathVariable Integer id) {
+        emergencyService.deleteEmergency(id);
     }
 }
